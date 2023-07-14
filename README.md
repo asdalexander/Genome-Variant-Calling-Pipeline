@@ -17,7 +17,8 @@ This variant calling pipeline accepts FASTQ-formatted reads from whole-genome or
 
 ### Future State
 - Certain tasks which do not require human intervention will be automated to run in parallel.
-- For example: executing 00_Data, 01_QC, and 02_Trim in parallel, then running 03_Align through 05_BQSR in series as each individual sample is processed, pausing between steps where MultiQC is involved to allow for human review.
+  - For example: executing 00_Data, 01_QC, and 02_Trim in parallel, then running 03_Align through 05_BQSR in series as each individual sample is processed, pausing between steps where MultiQC is involved to allow for human review.
+- Analysis and charts in R will be produced to analyze potential batch effects in population after QualiMap is complete for entire batch. 
 
 
 ## Tools Used and Sources
