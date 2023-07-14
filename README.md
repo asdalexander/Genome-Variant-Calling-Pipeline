@@ -1,17 +1,23 @@
 # Variant Calling Pipeline
 
-This variant calling pipeline was assembled for use in a research setting in order to process FASTQ-formatted reads from exome sequencing, and call variants against the GRCh38 human reference genome.
+This variant calling pipeline accepts FASTQ-formatted reads from whole-genome or exome sequencing as input, and will generate quality metrics from sequencing reads, align reads to the human reference genome, perform base quality score recalibration, and call variants for each sample aligned to the reference genome.
 
 ## Running the Pipeline in its Current State 
-- FASTQ-formatted files are placed in ../00_Data/original_reads
-- Resource files are downloaded using the scripts in corresponding directories, these include:
-  - Bowtie2 index files (../00_Data/bowtie2_index/DTN_get_index.sh)
-  - GRCh38 human reference genome (../00_Data/reference/DTN_get_reference_genome.sh)
+### Downloading and preparing pipeline files 
+- All FASTQ-formatted files should be placed in ../00_Data/original_reads. If using paried-end reads, be sure each forward and reverse file are labelled with the suffix "_1" and "_2", respectively. 
+- Resource files need to be downloaded using the scripts in corresponding directories, these include:
+  - Bowtie2 index files (../00_Data/bowtie2_index/DTN_get_index.sh). An index can be manually created or placed in this directory if using a reference genome different than GRCh38. 
+  - GRCh38 human reference genome (../00_Data/reference/DTN_get_reference_genome.sh). A different reference genome can be used by placing the corresponding *.fa file in this directory.
+
+### Running the pipeline
 - Pipeline steps should be executed one-at-a-time by running each shell file in order and waiting for the batch of samples to complete before moving to the next step. Each step is indicated by the directory prefix. Subdirectories also follow these prefixes. 
   - For example: ../01_QC/01_FastQC/FastQC.sh is executed, then ../01_QC/02_MultiQC/MultiQC.sh
+- A diagram outlining the order in which each shell file should be executed is shown below.
+![VarCallPipeline drawio](https://github.com/asdalexander/variant_calling_pipeline/assets/95765425/6c1b2417-03d8-4298-b440-0efe4a043f73)
 
-## Future State
-- Ideally this will be automated so that eligible tasks that can be run in parallel. A diagram of this state is shown below. 
+### Future State
+- Certain tasks which do not require human intervention will be automated to run in parallel.
+- For example: executing 00_Data, 01_QC, and 02_Trim in parallel, then running 03_Align through 05_BQSR in series as each individual sample is processed, pausing between steps where MultiQC is involved to allow for human review.
 
 
 ## Tools Used and Sources
