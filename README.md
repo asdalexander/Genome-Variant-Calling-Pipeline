@@ -1,6 +1,6 @@
 # Variant Calling Pipeline
 
-This variant calling pipeline accepts FASTQ-formatted reads from whole-genome or exome sequencing as input, and will generate quality metrics from sequencing reads, align reads to the human reference genome, perform base quality score recalibration, and call variants for each sample aligned to the reference genome.
+This variant calling pipeline accepts FASTQ-formatted reads from whole-genome or exome sequencing as input, generates quality control (QC) metrics from sequencing reads, aligns reads to the human reference genome, performs base quality score recalibration, and calls variants for each sample aligned to the reference genome.
 
 ## Running the Pipeline in its Current State 
 ### Downloading and preparing pipeline files 
