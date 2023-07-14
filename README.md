@@ -1,9 +1,20 @@
 # Variant Calling Pipeline
 
-This variant calling pipeline has been used in a research setting to process FASTQ-formatted reads from exome sequencing, and call variants against the GRCh38 reference genome.
+This variant calling pipeline was assembled for use in a research setting in order to process FASTQ-formatted reads from exome sequencing, and call variants against the GRCh38 human reference genome.
+
+## Running the Pipeline in its Current State 
+- FASTQ-formatted files are placed in ../00_Data/original_reads
+- Resource files are downloaded using the scripts in corresponding directories, these include:
+  - Bowtie2 index files (../00_Data/bowtie2_index/DTN_get_index.sh)
+  - GRCh38 human reference genome (../00_Data/reference/DTN_get_reference_genome.sh)
+- Pipeline steps should be executed one-at-a-time by running each shell file in order and waiting for the batch of samples to complete before moving to the next step. Each step is indicated by the directory prefix. Subdirectories also follow these prefixes. 
+  - For example: ../01_QC/01_FastQC/FastQC.sh is executed, then ../01_QC/02_MultiQC/MultiQC.sh
+
+## Future State
+- Ideally this will be automated so that eligible tasks that can be run in parallel. A diagram of this state is shown below. 
 
 
-## Sources
+## Tools Used and Sources
 #### FastQC:
 Andrews, S. (2010). FastQC:  A Quality Control Tool for High Throughput Sequence Data [Online]. Available online at: http://www.bioinformatics.babraham.ac.uk/projects/fastqc/​
 
