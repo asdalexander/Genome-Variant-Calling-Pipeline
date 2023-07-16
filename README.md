@@ -48,6 +48,3 @@ Chang CC, Chow CC, Tellier LCAM, Vattikuti S, Purcell SM, Lee JJ (2015) Second-g
 
 #### FUMA Suite:
 K. Watanabe, E. Taskesen, A. van Bochoven and D. Posthuma. Functional mapping and annotation of genetic associations with FUMA. Nat. Commun. 8:1826. (2017).​
-
-#### Mucositis Pathobiology
-Sonis ST. The pathobiology of mucositis. Nat Rev Cancer. 2004 Apr;4(4):277-84. doi: 10.1038/nrc1318. PMID: 15057287.
