@@ -1,10 +1,19 @@
 #!/bin/bash
+########## SLURM HEADER START ##########
 #SBATCH --time=20:00:00
 #SBATCH --job-name=AddOrReplaceReadGroups
 #SBATCH --partition=Orion
-#SBATCH --ntasks-per-node=36
-#SBATCH --mem=98GB
+#SBATCH --ntasks-per-node=24
+#SBATCH --mem=48GB
+########## SLURM HEADER END ##########
 
+########## DESCRIPTION ##########
+# 04_Sort contains a series of five scripts which perform GATK-recommended steps to further process 
+# reads before variant calling. 
+# AddOrReplaceReadGroups adds or replaces read groups in the SAM/BAM file which are required for 
+# downstream GATK processing. 
+
+########## SCRIPT START ##########
 echo "======================================================"
 echo "Start Time  : $(date)"
 echo "Submit Dir  : $SLURM_SUBMIT_DIR"
@@ -14,9 +23,9 @@ echo "======================================================"
 echo ""
 
 #update this if running the pipeline from a different directory
-TMP_PATH=/nobackup/mougeots_research/adam_alexander/pipeline
+TMP_PATH=/pipeline/absolute/directory
 
-GATK=/nobackup/mougeots_research/adam_alexander/tools/gatk/gatk-4.2.6.1/gatk
+GATK=#path/to/GATK/installation (ex: $TMP_PATH/tools/gatk/gatk-4.2.6.1/gatk)
 IN_DIR=$TMP_PATH/03_Align/02_output_data
 OUT_DIR=$TMP_PATH/04_Sort/01_output_data
 REF_DIR=$TMP_PATH/00_Data/reference/GRCh38.fna
@@ -50,4 +59,4 @@ echo "End Time   : $(date)"
 echo "======================================================"
 
 # queue next steps
-sbatch $TMP_PATH/04_Sort/02_MarkDuplicatesSpark.sh
+# sbatch $TMP_PATH/04_Sort/02_MarkDuplicatesSpark.sh
