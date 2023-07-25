@@ -1,10 +1,26 @@
 #!/bin/bash
+########## SLURM HEADER START ##########
 #SBATCH --time=20:00:00
 #SBATCH --job-name=BaseRecalibrator
 #SBATCH --partition=Orion
-#SBATCH --ntasks-per-node=36
-#SBATCH --mem=98GB
+#SBATCH --ntasks-per-node=24
+#SBATCH --mem=48GB
+########## SLURM HEADER END ##########
 
+########## DESCRIPTION ##########
+# 05_BQSR contains a series of four scripts which perform a GATK-recommended process known as
+# "Base Quality Score Recalibration" 
+
+# This series of steps adds an adjusted quality score based on predicted quality error added into the 
+# sequencing data by different sequencing machines.
+# For BQSR, only quality score information is needed. To see all effects BQSR corrects for, see 
+# GATK4 documentation on the process. 
+
+# BaseRecalibrator takes coordinate-sorted SAM/BAM files and generates a recalibration table 
+# to be used in downstream BQSR steps. No recaliration is performed yet. 
+
+
+########## SCRIPT START ##########
 echo "======================================================"
 echo "Start Time  : $(date)"
 echo "Submit Dir  : $SLURM_SUBMIT_DIR"
@@ -14,9 +30,9 @@ echo "======================================================"
 echo ""
 
 #update this if running the pipeline from a different directory
-TMP_PATH=/nobackup/mougeots_research/adam_alexander/pipeline
+TMP_PATH=/pipeline/absolute/directory
 
-GATK=/nobackup/mougeots_research/adam_alexander/tools/gatk/gatk-4.2.6.1/gatk
+GATK=#path/to/GATK/installation (ex: $TMP_PATH/tools/gatk/gatk-4.2.6.1/gatk)
 OUT_DIR=$TMP_PATH/05_BQSR/01_output_data
 REF_DIR=$TMP_PATH/00_Data/reference/GRCh38.fna
 
@@ -52,4 +68,4 @@ echo "End Time   : $(date)"
 echo "======================================================"
 
 # queue next steps
-sbatch $TMP_PATH/05_BQSR/02_ApplyBQSR.sh
+# sbatch $TMP_PATH/05_BQSR/02_ApplyBQSR.sh
