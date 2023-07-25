@@ -1,17 +1,18 @@
 #!/bin/bash
+########## SLURM HEADER START ##########
 #SBATCH --time=00:30:00
 #SBATCH --job-name=processVCFs
 #SBATCH --partition=Orion
 #SBATCH --ntasks-per-node=16
 #SBATCH --mem=36GB
+########## SLURM HEADER END ##########
 
-#update this if running the pipeline from a different directory
-TMP_PATH=/nobackup/mougeots_research/adam_alexander/pipeline
+########## DESCRIPTION ##########
+# This script automates formatting of variant call files in .vcf format from HaplotypeCaller 
+# for use in PLINK2. Additional steps include filtering of called variants to include biallelic-only (a limitation of Plink 1.9 and FUMA),
+# MAF of a certain frequency, and more. Be sure to adjust these for your specific use-case. 
 
-IN_DIR=$TMP_PATH/06_Call_Variants/01_output_data
-OUT_DIR=$TMP_PATH/07_PLINK/01_pre_process_vcfs_haplotype/output_data
-REF_DIR=$TMP_PATH/00_Data/reference/GRCh38.fna
-
+########## SCRIPT START ##########
 echo "======================================================"
 echo "Start Time  : $(date)"
 echo "Submit Dir  : $SLURM_SUBMIT_DIR"
@@ -19,6 +20,13 @@ echo "Job ID/Name : $SLURM_JOBID / $SLURM_JOB_NAME"
 echo "Num Tasks   : $SLURM_NTASKS total [$SLURM_NNODES nodes @ $SLURM_CPUS_ON_NODE CPUs/node]"
 echo "======================================================"
 echo ""
+
+#update this if running the pipeline from a different directory
+TMP_PATH=/pipeline/absolute/directory
+
+IN_DIR=$TMP_PATH/06_Call_Variants/01_output_data
+OUT_DIR=$TMP_PATH/07_PLINK/01_pre_process_vcfs_haplotype/output_data
+REF_DIR=$TMP_PATH/00_Data/reference/GRCh38.fna
 
 module load anaconda3
 source activate bcftools
