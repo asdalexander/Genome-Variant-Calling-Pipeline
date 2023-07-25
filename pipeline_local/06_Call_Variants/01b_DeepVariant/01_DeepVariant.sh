@@ -1,11 +1,20 @@
 #!/bin/bash
+########## SLURM HEADER START ##########
 #SBATCH --time=02:00:00
 #SBATCH --job-name=DeepVariant
 #SBATCH --partition=Orion
 #SBATCH --ntasks-per-node=18
 #SBATCH --mem=24GB
+########## SLURM HEADER END ##########
 
-# echo SLURM job info
+########## DESCRIPTION ##########
+# This script uses Google's DeepVariant to call variants in SAM/BAM files against the reference genome. 
+# This pipeline is configured to use either HaplotypeCaller or DeepVariant.
+
+# For this variant caller, DeepVariant is confifured in a container using Singularity, 
+# which operates similarly to Docker and was created for use in high performance and cluster computing environments. 
+
+########## SCRIPT START ##########
 echo "======================================================"
 echo "Start Time  : $(date)"
 echo "Submit Dir  : $SLURM_SUBMIT_DIR"
