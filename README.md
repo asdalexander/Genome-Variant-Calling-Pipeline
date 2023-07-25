@@ -13,7 +13,7 @@ This variant calling pipeline accepts FASTQ-formatted reads from whole-genome or
 - Pipeline steps should be executed one-at-a-time by running each shell file in order and waiting for the batch of samples to complete before moving to the next step. Each step is indicated by the directory prefix. Subdirectories also follow these prefixes. 
   - For example: ../01_QC/01_FastQC/FastQC.sh is executed, then ../01_QC/02_MultiQC/MultiQC.sh
 - A diagram outlining the order in which each shell file should be executed is shown below.
-![VarCallPipeline drawio](https://github.com/asdalexander/variant_calling_pipeline/assets/95765425/6c1b2417-03d8-4298-b440-0efe4a043f73)
+![VarCallPipeline drawio](https://github.com/asdalexander/genome_variant_calling_pipeline/assets/95765425/c380171f-0213-40c7-8a27-4cff56a92d0e)
 
 ### Future State
 - Certain tasks which do not require human intervention will be automated to run in parallel.
