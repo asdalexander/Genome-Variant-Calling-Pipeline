@@ -1,10 +1,18 @@
 #!/bin/bash
+########## SLURM HEADER START ##########
 #SBATCH --time=24:00:00
 #SBATCH --job-name=TrimGalore
 #SBATCH --partition=Orion
 #SBATCH --ntasks-per-node=16
-#SBATCH --mem=96GB
+#SBATCH --mem=32GB
+########## SLURM HEADER END ##########
 
+########## DESCRIPTION ##########
+# Run TrimGalore on each of the original FASTQ reads.
+# Used to trim adapter sequences and low-quality reads 
+# before alignmnent to the reference. 
+
+########## SCRIPT START ##########
 echo "======================================================"
 echo "Start Time  : $(date)"
 echo "Submit Dir  : $SLURM_SUBMIT_DIR"
@@ -17,7 +25,7 @@ module load anaconda3
 source activate trim_galore
 
 #update this if running the pipeline from a different directory
-TMP_PATH=/nobackup/mougeots_research/adam_alexander/pipeline
+TMP_PATH=/pipeline/absolute/directory
 
 IN_DIR=$TMP_PATH/00_Data/original_reads
 OUT_DIR=$TMP_PATH/02_Trim/01_output_data
@@ -46,5 +54,5 @@ echo "End Time   : $(date)"
 echo "======================================================"
 
 # queue next steps
-sbatch $TMP_PATH/03_Align/01_bowtie2.sh
-sbatch $TMP_PATH/02_Trim/02_MultiQC.sh
+# sbatch $TMP_PATH/03_Align/01_bowtie2.sh
+# sbatch $TMP_PATH/02_Trim/02_MultiQC.sh
