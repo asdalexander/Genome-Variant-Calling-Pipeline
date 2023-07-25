@@ -1,10 +1,20 @@
 #!/bin/bash
+########## SLURM HEADER START ##########
 #SBATCH --time=20:00:00
 #SBATCH --job-name=BaseRecalibrator
 #SBATCH --partition=Orion
-#SBATCH --ntasks-per-node=8
+#SBATCH --ntasks-per-node=24
 #SBATCH --mem=48GB
+########## SLURM HEADER END ##########
 
+########## DESCRIPTION ##########
+# 05_BQSR contains a series of four scripts which perform a GATK-recommended process known as
+# "Base Quality Score Recalibration" 
+
+# The second run of BaseRecalibrator generates another set of recalibration data for
+# comparison purposes before/after runs. 
+
+########## SCRIPT START ##########
 echo "======================================================"
 echo "Start Time  : $(date)"
 echo "Submit Dir  : $SLURM_SUBMIT_DIR"
@@ -14,9 +24,9 @@ echo "======================================================"
 echo ""
 
 #update this if running the pipeline from a different directory
-TMP_PATH=/nobackup/mougeots_research/adam_alexander/pipeline
+TMP_PATH=/pipeline/absolute/directory
 
-GATK=/nobackup/mougeots_research/adam_alexander/tools/gatk/gatk-4.2.6.1/gatk
+GATK=#path/to/GATK/installation (ex: $TMP_PATH/tools/gatk/gatk-4.2.6.1/gatk)
 IN_DIR=$TMP_PATH/05_BQSR/02_output_data
 OUT_DIR=$TMP_PATH/05_BQSR/03_output_data
 REF_DIR=$TMP_PATH/00_Data/reference/GRCh38.fna
@@ -50,4 +60,4 @@ echo "End Time   : $(date)"
 echo "======================================================"
 
 # queue next steps
-#sbatch $TMP_PATH/05_BQSR/04_AnalyzeCovariates.sh
+# sbatch $TMP_PATH/05_BQSR/04_AnalyzeCovariates.sh
