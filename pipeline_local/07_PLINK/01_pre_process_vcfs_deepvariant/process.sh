@@ -8,7 +8,7 @@
 ########## SLURM HEADER END ##########
 
 ########## DESCRIPTION ##########
-# This script automates formatting of variant call files in .vcf format from HaplotypeCaller 
+# This script automates formatting of variant call files in .vcf format from DeepVariant 
 # for use in PLINK2. Additional steps include filtering of called variants to include biallelic-only (a limitation of Plink 1.9 and FUMA),
 # MAF of a certain frequency, and more. Be sure to adjust these for your specific use-case. 
 
