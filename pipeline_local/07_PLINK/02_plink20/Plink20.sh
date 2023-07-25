@@ -1,12 +1,22 @@
 #!/bin/bash
+########## SLURM HEADER START ##########
 #SBATCH --time=00:20:00
 #SBATCH --job-name=Plink20
 #SBATCH --partition=Orion
 #SBATCH --ntasks-per-node=12
 #SBATCH --mem=36GB
+########## SLURM HEADER END ##########
 
+########## DESCRIPTION ##########
+# This script supplies PLINK2 with vcf files formatted in the previous step, and 
+# runs a logistic case-control association analysis based on features available in
+# a phenotype file. The script supplies settings but will require significant 
+# customization to perform the functions mentioned. Read the PLINK2 manual for additional 
+# file formatting requirements and nuances in the settings.  
+
+########## SCRIPT START ##########
 #update this if running the pipeline from a different directory
-TMP_PATH=/nobackup/mougeots_research/adam_alexander/pipeline
+TMP_PATH=/pipeline/absolute/directory
 
 DEEPVARIANT_IN_DIR=$TMP_PATH/07_PLINK/01_pre_process_vcfs_deepvariant/output_data/biallelic_genotype.recode.vcf
 HAPLOTYPE_IN_DIR=$TMP_PATH/07_PLINK/01_pre_process_vcfs_haplotype/output_data/biallelic_genotype.recode.vcf
@@ -26,8 +36,8 @@ echo ""
 
 module load plink/2.00
 
-# Purge existing files from output dir
-rm $OUT_DIR/* 
+# Optionally purge existing files from output dir
+# rm $OUT_DIR/* 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Plink vcf to binary (deepvariant)
@@ -68,89 +78,4 @@ awk '{print $1 " " $2}' \
 "$OUT_DIR/deepvariant_withCovars.OM_24.glm.logistic.hybrid" >\
 "$OUT_DIR/deepvariant_wCovars.dbsnpRef"
 
-
-# Plink logistic association without covariates (deepvariant)
-plink2                          \
---pfile $OUT_DIR/deepvariant    \
---double-id                     \
---chr 1-22                      \
---glm allow-no-covars           \
---ci 0.95                       \
---pfilter 1                     \
---adjust                        \
---make-bed                      \
---out $OUT_DIR/deepvariant_noCovars
-
-# Create an input file for SNP2GENE
-awk '{print $1 " " $2 " " $10 " " $15}' \
-"$OUT_DIR/deepvariant_noCovars.OM_24.glm.logistic.hybrid" >\
-"$OUT_DIR/deepvariant_noCovars.logit"
-
-# Create an input file for Query Kaviar
-awk '{print $1 " " $2}' \
-"$OUT_DIR/deepvariant_noCovars.OM_24.glm.logistic.hybrid" >\
-"$OUT_DIR/deepvariant_noCovars.dbsnpRef"
-
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Plink vcf to binary (haplotypecaller)
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-plink2                      \
---vcf $HAPLOTYPE_IN_DIR     \
---double-id                 \
---make-pgen                 \
---allow-extra-chr           \
---update-sex $UPDATE_SEX    \
---pheno $PHENOTYPES         \
---pheno-name OM_24          \
---chr 1-22                  \
---pca meanimpute            \
---out $OUT_DIR/haplotype
-
-# Plink logistic association with covariates (haplotypecaller)
-plink2                      \
---pfile $OUT_DIR/haplotype  \
---double-id                 \
---chr 1-22                  \
---covar $PHENOTYPES         \
---covar-name Myeloablative  \
---glm                       \
---ci 0.95                   \
---pfilter 1                 \
---adjust                    \
---make-bed                  \
---out $OUT_DIR/haplotype_withCovars
-
-# Create an input file for SNP2GENE
-awk '{print $1 " " $2 " " $10 " " $15}' \
-"$OUT_DIR/haplotype_withCovars.OM_24.glm.logistic.hybrid" >\
-"$OUT_DIR/haplotype_wCovars.logit"
-
-# Create an input file for Query Kaviar
-awk '{print $1 " " $2}' \
-"$OUT_DIR/haplotype_withCovars.OM_24.glm.logistic.hybrid" >\
-"$OUT_DIR/haplotype_wCovars.dbsnpRef"
-
-
-# Plink logistic association without covariates (haplotypecaller)
-plink2                      \
---pfile $OUT_DIR/haplotype  \
---double-id                 \
---chr 1-22                  \
---glm allow-no-covars       \
---ci 0.95                   \
---pfilter 1                 \
---adjust                    \
---make-bed                  \
---out $OUT_DIR/haplotype_noCovars
-
-# Create an input file for SNP2GENE
-awk '{print $1 " " $2 " " $10 " " $15}' \
-"$OUT_DIR/haplotype_noCovars.OM_24.glm.logistic.hybrid" >\
-"$OUT_DIR/haplotype_noCovars.logit"
-
-# Create an input file for Query Kaviar
-awk '{print $1 " " $2}' \
-"$OUT_DIR/haplotype_noCovars.OM_24.glm.logistic.hybrid" >\
-"$OUT_DIR/haplotype_noCovars.dbsnpRef"
 
