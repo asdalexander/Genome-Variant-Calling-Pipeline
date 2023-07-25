@@ -12,6 +12,10 @@
 # Used to trim adapter sequences and low-quality reads 
 # before alignmnent to the reference. 
 
+# For forward and reverse files, the forward reads file must 
+# contain the suffix "_R1_001.fastq.gz" and the reverse files
+# "_R1_001.fastq.gz"
+
 ########## SCRIPT START ##########
 echo "======================================================"
 echo "Start Time  : $(date)"
