@@ -1,10 +1,17 @@
 #!/bin/bash
+########## SLURM HEADER START ##########
 #SBATCH --time=12:00:00
 #SBATCH --job-name=HaplotypeCaller
 #SBATCH --partition=Orion
 #SBATCH --ntasks-per-node=12
-#SBATCH --mem=98GB
+#SBATCH --mem=24GB
+########## SLURM HEADER END ##########
 
+########## DESCRIPTION ##########
+# This script uses HaplotypeCaller to call variants in SAM/BAM files against the reference genome. 
+# This pipeline is configured to use either HaplotypeCaller or DeepVariant.
+
+########## SCRIPT START ##########
 echo "======================================================"
 echo "Start Time  : $(date)"
 echo "Submit Dir  : $SLURM_SUBMIT_DIR"
@@ -17,9 +24,9 @@ module load anaconda3
 source activate gatk
 
 #update this if running the pipeline from a different directory
-TMP_PATH=/nobackup/mougeots_research/adam_alexander/pipeline
+TMP_PATH=/pipeline/absolute/directory
 
-GATK=/nobackup/mougeots_research/adam_alexander/tools/gatk/gatk-4.2.6.1/gatk
+GATK=#path/to/GATK/installation (ex: $TMP_PATH/tools/gatk/gatk-4.2.6.1/gatk)
 IN_DIR=$TMP_PATH/05_BQSR/02_output_data
 OUT_DIR=$TMP_PATH/06_Call_Variants/01_output_data
 REF_DIR=$TMP_PATH/00_Data/reference/GRCh38.fna
