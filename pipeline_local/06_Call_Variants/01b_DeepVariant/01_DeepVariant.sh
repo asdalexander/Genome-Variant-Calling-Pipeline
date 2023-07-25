@@ -39,7 +39,7 @@ echo ""
 module load singularity
 
 # Update this if running the pipeline from a different directory
-TMP_PATH=/nobackup/mougeots_research/adam_alexander/pipeline
+TMP_PATH=/pipeline/absolute/directory
 
 # Set IN, OUT, and REF dirs
 IN_DIR=$TMP_PATH/04_Sort/02_output_data
