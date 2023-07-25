@@ -1,10 +1,22 @@
 #!/bin/bash
+########## SLURM HEADER START ##########
 #SBATCH --time=20:00:00
 #SBATCH --job-name=samtobam
 #SBATCH --partition=Orion
-#SBATCH --ntasks-per-node=36
-#SBATCH --mem=98GB
+#SBATCH --ntasks-per-node=24
+#SBATCH --mem=48GB
+########## SLURM HEADER END ##########
 
+########## DESCRIPTION ##########
+# The SAM file format is expensive with regard to usage of disk space. 
+# To allow for quicker downstream processing and to save disk space, 
+# this script converts each sample's SAM file format into a BAM file 
+# format. 
+
+# The script does not currently automatically delete the existing SAM-formatted file. 
+
+
+########## SCRIPT START ##########
 echo "======================================================"
 echo "Start Time  : $(date)"
 echo "Submit Dir  : $SLURM_SUBMIT_DIR"
@@ -16,7 +28,7 @@ echo ""
 module load samtools
 
 #update this if running the pipeline from a different directory
-TMP_PATH=/nobackup/mougeots_research/adam_alexander/pipeline
+TMP_PATH=/pipeline/absolute/directory
 
 IN_DIR=$TMP_PATH/03_Align/01_output_data/
 OUT_DIR=$TMP_PATH/03_Align/02_output_data/
@@ -39,4 +51,4 @@ echo "End Time   : $(date)"
 echo "======================================================"
 
 # queue next steps
-sbatch $TMP_PATH/04_Sort/01_AddOrReplaceReadGroups.sh
+# sbatch $TMP_PATH/04_Sort/01_AddOrReplaceReadGroups.sh
