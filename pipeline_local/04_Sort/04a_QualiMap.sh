@@ -4,7 +4,7 @@
 #SBATCH --job-name=QualiMap
 #SBATCH --partition=Orion
 #SBATCH --ntasks-per-node=8
-#SBATCH --mem=96GB
+#SBATCH --mem=48GB
 ########## SLURM HEADER END ##########
 
 ########## DESCRIPTION ##########
