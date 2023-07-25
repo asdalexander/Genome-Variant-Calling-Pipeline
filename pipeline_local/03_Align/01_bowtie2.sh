@@ -1,10 +1,21 @@
 #!/bin/bash
+########## SLURM HEADER START ##########
 #SBATCH --time=20:00:00
 #SBATCH --job-name=bowtie2
 #SBATCH --partition=Orion
 #SBATCH --ntasks-per-node=24
 #SBATCH --mem=96GB
+########## SLURM HEADER END ##########
 
+########## DESCRIPTION ##########
+# Bowtie2 performs read alignment to a reference in a memory-efficient manner. 
+# This script will iterate through each sample in the original_reads directory
+# and perform alignment before moving onto the next sample. For forward and reverse
+# reads, the forward file must have the suffix "R1_001_val_1" and the reverse file will
+# be formatted to match "R2_001_val_2".
+
+
+########## SCRIPT START ##########
 echo "======================================================"
 echo "Start Time  : $(date)"
 echo "Submit Dir  : $SLURM_SUBMIT_DIR"
@@ -16,7 +27,7 @@ echo ""
 module load bowtie2
 
 #update this if running the pipeline from a different directory
-TMP_PATH=/nobackup/mougeots_research/adam_alexander/pipeline
+TMP_PATH=/pipeline/absolute/directory
 
 IN_DIR=$TMP_PATH/02_Trim/01_output_data
 OUT_DIR=$TMP_PATH/03_Align/01_output_data/
@@ -45,4 +56,4 @@ echo "End Time   : $(date)"
 echo "======================================================"
 
 # queue next steps
-sbatch $TMP_PATH/03_Align/02_sam_to_bam.sh
+# sbatch $TMP_PATH/03_Align/02_sam_to_bam.sh
