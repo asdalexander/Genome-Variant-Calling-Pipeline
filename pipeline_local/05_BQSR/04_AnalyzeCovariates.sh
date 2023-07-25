@@ -1,10 +1,19 @@
 #!/bin/bash
+########## SLURM HEADER START ##########
 #SBATCH --time=24:00:00
 #SBATCH --job-name=analyzecovar
 #SBATCH --partition=Orion
 #SBATCH --ntasks-per-node=16
-#SBATCH --mem=24GB
+#SBATCH --mem=32GB
+########## SLURM HEADER END ##########
 
+########## DESCRIPTION ##########
+# 05_BQSR contains a series of four scripts which perform a GATK-recommended process known as
+# "Base Quality Score Recalibration" 
+
+# AnalyzeCovariates generates a QC report using both the before and after sets of recalibration data.
+
+########## SCRIPT START ##########
 echo "======================================================"
 echo "Start Time  : $(date)"
 echo "Submit Dir  : $SLURM_SUBMIT_DIR"
@@ -14,9 +23,9 @@ echo "======================================================"
 echo ""
 
 #update this if running the pipeline from a different directory
-TMP_PATH=/nobackup/mougeots_research/adam_alexander/pipeline
+TMP_PATH=/pipeline/absolute/directory
 
-GATK=/nobackup/mougeots_research/adam_alexander/tools/gatk/gatk-4.2.6.1/gatk
+GATK=#path/to/GATK/installation (ex: $TMP_PATH/tools/gatk/gatk-4.2.6.1/gatk)
 BEFORE_DIR=$TMP_PATH/05_BQSR/01_output_data
 AFTER_DIR=$TMP_PATH/05_BQSR/03_output_data
 OUT_DIR=$TMP_PATH/05_BQSR/04_output_data
