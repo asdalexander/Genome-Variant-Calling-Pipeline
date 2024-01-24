@@ -1,31 +1,23 @@
 #!/bin/bash
-########## SLURM HEADER START ##########
 #SBATCH --time=00:20:00
 #SBATCH --job-name=Plink20
 #SBATCH --partition=Orion
 #SBATCH --ntasks-per-node=12
 #SBATCH --mem=36GB
-########## SLURM HEADER END ##########
 
-########## DESCRIPTION ##########
-# This script supplies PLINK2 with vcf files formatted in the previous step, and 
-# runs a logistic case-control association analysis based on features available in
-# a phenotype file. The script supplies settings but will require significant 
-# customization to perform the functions mentioned. Read the PLINK2 manual for additional 
-# file formatting requirements and nuances in the settings.  
+# Update TMP_PATH if running the pipeline from a different directory
+TMP_PATH=/projects/mougeots_research/adam_alexander/pipeline
 
-########## SCRIPT START ##########
-#update this if running the pipeline from a different directory
-TMP_PATH=/pipeline/absolute/directory
+# Update to change PLINK output file prefix
+OUT_NAME=caseLEUKEMIAyOM24_controlOTHER_DeepVariant
+PHENO_NAME=case_LEUKEMIA_subsetOM
 
-DEEPVARIANT_IN_DIR=$TMP_PATH/07_PLINK/01_pre_process_vcfs_deepvariant/output_data/biallelic_genotype.recode.vcf
-HAPLOTYPE_IN_DIR=$TMP_PATH/07_PLINK/01_pre_process_vcfs_haplotype/output_data/biallelic_genotype.recode.vcf
-OUT_DIR=$TMP_PATH/07_PLINK/02_plink20/output_data
-
+VCF_IN_DIR=$TMP_PATH/07_PLINK/01_pre_process_vcfs_deepvariant/output_data/biallelic_genotype.recode.vcf
+OUT_DIR=$TMP_PATH/07_PLINK/02_plink20/caseLEUKEMIAyOM24_controlOTHER_DeepVariant
 UPDATE_SEX=$TMP_PATH/07_PLINK/phenotypes/update_sex
-PHENOTYPES=$TMP_PATH/07_PLINK/phenotypes/phenotypes
+PHENOTYPES=$TMP_PATH/07_PLINK/phenotypes/phenotypes_leukOM24_OM01
 
-
+# Print SLURM job info
 echo "======================================================"
 echo "Start Time  : $(date)"
 echo "Submit Dir  : $SLURM_SUBMIT_DIR"
@@ -36,46 +28,28 @@ echo ""
 
 module load plink/2.00
 
-# Optionally purge existing files from output dir
-# rm $OUT_DIR/* 
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Plink vcf to binary (deepvariant)
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# PLINK convert VCF to PLINK binary files
 plink2 \
---vcf $DEEPVARIANT_IN_DIR       `# INPUT:   Merged VCF` \
+--vcf $VCF_IN_DIR               `# INPUT:   Merged VCF` \
 --double-id                     `# OPTION:  Sync FID and IID, necc. for interop betwn Plink 1.9-2.0` \
 --make-pgen                     `# OUTPUT:  Plink2 binary files` \
 --allow-extra-chr               `# OPTION:  Allow alternate chromosome names` \
 --update-sex $UPDATE_SEX        `# INPUT:   Update plink binary files to include sex` \
 --pheno $PHENOTYPES             `# INPUT:   Phenotype file` \
---pheno-name OM_24              `# FILTER:  Which phenotypes are included` \
+--pheno-name $PHENO_NAME        `# FILTER:  Which phenotypes are included` \
+--keep $PHENOTYPES \
 --chr 1-22                      `# FILTER:  Restrict analysis to autosomes only` \
---pca meanimpute                `# OUTPUT:  PCA stats, meanimpute solves for high genotype missingness` \
---out $OUT_DIR/deepvariant
+--maf 0.01 \
+--out $OUT_DIR/"$OUT_NAME"
 
-# Plink logistic association with covariates (deepvariant)
+# PLINK run logistic association without covariates
 plink2                          \
---pfile $OUT_DIR/deepvariant    `# INPUT:   Plink binary files generated above` \
---double-id                     `# OPTION:  Sync FID and IID, necc. for interop betwn Plink 1.9-2.0` \
---chr 1-22                      `# FILTER:  Restrict analysis to autosomes only` \
---covar $PHENOTYPES             \
---covar-name Myeloablative      \
---glm                           `# OUTPUT:  Linear/Logistic regression, association analysis (wo Prin. Comps. as covars)` \
---ci 0.95                       `# OPTION:  Output confidence interval with assoc file` \
---pfilter 1                     `# FILTER:  Remove 'NA' p-values` \
---adjust                        `# OUTPUT:  Adjusted correction stats for multiple testing` \
+--pfile $OUT_DIR/$OUT_NAME      \
+--double-id                     \
+--chr 1-22                      \
+--glm allow-no-covars           \
+--ci 0.95                       \
+--pfilter 1                     \
+--adjust                        \
 --make-bed                      \
---out $OUT_DIR/deepvariant_withCovars
-
-# Create an input file for SNP2GENE
-awk '{print $1 " " $2 " " $10 " " $15}' \
-"$OUT_DIR/deepvariant_withCovars.OM_24.glm.logistic.hybrid" >\
-"$OUT_DIR/deepvariant_wCovars.logit"
-
-# Create an input file for Query Kaviar
-awk '{print $1 " " $2}' \
-"$OUT_DIR/deepvariant_withCovars.OM_24.glm.logistic.hybrid" >\
-"$OUT_DIR/deepvariant_wCovars.dbsnpRef"
-
-
+--out $OUT_DIR/$OUT_NAME
