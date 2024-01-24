@@ -56,6 +56,7 @@ module load vcftools
     --vcf "$OUT_DIR/genotype.vcf" \
     --min-alleles 2 \
     --max-alleles 2 \
+    --maf 0.01 \
     --recode \
     --recode-INFO-all \
     --out "$OUT_DIR/biallelic_genotype"
